@@ -294,20 +294,16 @@
 </main>
 
 <script>
-// ── CONFIG ─────────────────────────────────────────────────────────────────
-const APPS_SCRIPT_URL = "YOUR_APPS_SCRIPT_URL_HERE"; // replaced after deploy
-const ANTHROPIC_KEY   = "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";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzbaYOHicTrdR4olZNORVXd6vpIc-VrHWOtOCS4eCBrMqPmN5owAdvsRPLRqwFs2uy6/exec";
 const TODAY = (() => {
   const d = new Date();
   return `${d.getDate()}.${d.getMonth()+1}.${String(d.getFullYear()).slice(-2)}`;
 })();
 
-// ── STATE ───────────────────────────────────────────────────────────────────
 let imageBase64 = null;
 let parsedRows  = [];
 let existingKeys = new Set();
 
-// ── ELEMENTS ────────────────────────────────────────────────────────────────
 const fileInput      = document.getElementById('fileInput');
 const dropZone       = document.getElementById('dropZone');
 const dropText       = document.getElementById('dropText');
@@ -328,12 +324,10 @@ const connText       = document.getElementById('connText');
 const noNewMsg       = document.getElementById('noNewMsg');
 const statsRow       = document.getElementById('statsRow');
 
-// ── DEDUP KEY ────────────────────────────────────────────────────────────────
 function dedupKey(date, vendor, qty, rate) {
   return `${(date||'').trim()}|${(vendor||'').trim().toLowerCase()}|${String(qty||'').trim()}|${String(rate||'').trim()}`;
 }
 
-// ── CONNECTION CHECK ─────────────────────────────────────────────────────────
 async function checkConnection() {
   try {
     const r = await fetch(APPS_SCRIPT_URL + "?action=ping");
@@ -343,13 +337,13 @@ async function checkConnection() {
       connText.textContent = "Sheet connected";
       loadExistingRows();
     } else throw new Error();
-  } catch {
+  } catch(e) {
     connDot.className = "conn-dot err";
     connText.textContent = "Sheet offline";
+    console.error("Connection error:", e);
   }
 }
 
-// ── LOAD EXISTING ROWS ────────────────────────────────────────────────────────
 async function loadExistingRows() {
   try {
     const r = await fetch(APPS_SCRIPT_URL + "?action=read");
@@ -375,7 +369,6 @@ function renderStats(rows) {
   `;
 }
 
-// ── FILE UPLOAD ───────────────────────────────────────────────────────────────
 fileInput.addEventListener('change', e => {
   const file = e.target.files[0];
   if (!file) return;
@@ -404,7 +397,6 @@ dropZone.addEventListener('drop', e => {
   if (file) { fileInput.files = e.dataTransfer.files; fileInput.dispatchEvent(new Event('change')); }
 });
 
-// ── PARSE ─────────────────────────────────────────────────────────────────────
 parseBtn.addEventListener('click', async () => {
   if (!imageBase64) return;
   parseBtn.disabled = true;
@@ -414,42 +406,16 @@ parseBtn.addEventListener('click', async () => {
   try {
     await loadExistingRows();
 
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': ANTHROPIC_KEY, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
-      body: JSON.stringify({
-        model: 'claude-opus-4-5',
-        max_tokens: 1000,
-        system: `You extract purchase transactions from images for an Indian iron & steel scrap trading company. The image may be a WhatsApp chat screenshot.
-
-Return ONLY a JSON array, no markdown, no explanation. Each object must have exactly:
-- date: string in D.M.YY format (use today ${TODAY} if not visible)
-- vendor: string (name of seller/supplier)
-- type: string (scrap type: CR, HR, TC, CRNO, Prime Dal, Dal Bundle, CRC, Kinari etc. — empty if unclear)
-- qty_kg: number (quantity in KG — if given in tonnes multiply by 1000; "20 ton" = 20000)
-- rate: number (rate per tonne as integer)
-- location: string (city/area like Mayapuri, Mundka, Nathupur — empty if not mentioned)
-- gst_included: boolean (true only if explicitly says "including GST")
-- notes: string (loading date, partial lot, etc. — empty if none)
-
-Only extract real purchase deals. Skip system messages, greetings, forwarded tags, timestamps, and non-deal text.`,
-        messages: [{
-          role: 'user',
-          content: [
-            { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: imageBase64 } },
-            { type: 'text', text: 'Extract all purchase entries from this screenshot as a JSON array.' }
-          ]
-        }]
-      })
-    });
-
+    // Call Anthropic via Apps Script proxy to avoid CORS
+    const url = `${APPS_SCRIPT_URL}?action=parse&today=${encodeURIComponent(TODAY)}&image=${encodeURIComponent(imageBase64)}`;
+    const resp = await fetch(url);
     const data = await resp.json();
-    const raw = data.content?.find(b => b.type === 'text')?.text || '[]';
-    const clean = raw.replace(/```json|```/g, '').trim();
-    parsedRows = JSON.parse(clean);
+
+    if (data.error) throw new Error(data.error);
+    parsedRows = data.rows || [];
 
     if (!Array.isArray(parsedRows) || parsedRows.length === 0) {
-      showStatus('No purchase entries found in this screenshot. Try a clearer image or crop closer to the deal text.', 'error');
+      showStatus('No purchase entries found. Try a clearer image or crop closer to the deal text.', 'error');
       parseBtn.disabled = false;
       parseBtn.innerHTML = '🤖 Parse screenshot with AI';
       return;
@@ -467,21 +433,17 @@ Only extract real purchase deals. Skip system messages, greetings, forwarded tag
   parseBtn.innerHTML = '🤖 Parse screenshot with AI';
 });
 
-// ── RENDER TABLE ──────────────────────────────────────────────────────────────
 function renderTable() {
   tableBody.innerHTML = '';
   let nNew = 0, nDup = 0;
-
   parsedRows.forEach((row, i) => {
     const key = dedupKey(row.date, row.vendor, row.qty_kg, row.rate);
     const isDup = existingKeys.has(key);
     isDup ? nDup++ : nNew++;
-
     const tr = document.createElement('tr');
     tr.className = isDup ? 'is-dup' : 'is-new';
     tr.dataset.dup = isDup ? '1' : '0';
     tr.dataset.idx = i;
-
     tr.innerHTML = `
       <td><input type="text" value="${esc(row.date || TODAY)}" data-k="date" ${isDup?'disabled':''} /></td>
       <td><input type="text" value="${esc(row.vendor)}" data-k="vendor" ${isDup?'disabled':''} /></td>
@@ -498,7 +460,6 @@ function renderTable() {
     `;
     tableBody.appendChild(tr);
   });
-
   wireTableEvents();
   updateCounters(nNew, nDup);
 }
@@ -520,7 +481,6 @@ function wireTableEvents() {
       }
     });
   });
-
   tableBody.querySelectorAll('[data-del]').forEach(btn => {
     btn.addEventListener('click', e => {
       const i = +e.currentTarget.dataset.del;
@@ -547,69 +507,45 @@ function updateCounters(nNew, nDup) {
     : `💾 Save ${nNew} new row${nNew > 1 ? 's' : ''} to Google Sheet`;
 }
 
-// ── ADD ROW ───────────────────────────────────────────────────────────────────
 addRowBtn.addEventListener('click', () => {
   parsedRows.push({ date: TODAY, vendor: '', type: '', qty_kg: '', rate: '', location: '', gst_included: false, notes: '' });
   renderTable();
   tableBody.lastElementChild?.querySelector('input')?.focus();
 });
 
-// ── SAVE ──────────────────────────────────────────────────────────────────────
 saveBtn.addEventListener('click', async () => {
   const newRows = parsedRows.filter((_, i) => {
     const tr = tableBody.querySelector(`tr[data-idx="${i}"]`);
     return tr && tr.dataset.dup === '0';
   });
   if (!newRows.length) return;
-
   saveBtn.disabled = true;
   saveBtn.innerHTML = '<span class="spinner"></span> Saving…';
   hideStatus(); tsvWrap.style.display = 'none';
-
   try {
     const encoded = encodeURIComponent(JSON.stringify(newRows));
     const r = await fetch(`${APPS_SCRIPT_URL}?action=append&rows=${encoded}`);
     const d = await r.json();
-
     if (d.error) throw new Error(d.error);
-
     newRows.forEach(row => existingKeys.add(dedupKey(row.date, row.vendor, row.qty_kg, row.rate)));
     await loadExistingRows();
-    showStatus(`✓ ${d.appended} row${d.appended > 1 ? 's' : ''} saved to sheet. ${parsedRows.length - newRows.length} duplicate${parsedRows.length - newRows.length !== 1 ? 's' : ''} skipped.`, 'success');
+    showStatus(`✓ ${d.appended} row${d.appended > 1 ? 's' : ''} saved. ${parsedRows.length - newRows.length} duplicate${parsedRows.length - newRows.length !== 1 ? 's' : ''} skipped.`, 'success');
     renderTable();
-
   } catch (err) {
-    showStatus('Could not reach Apps Script. Use the TSV below to paste manually.', 'error');
-    const values = newRows.map(r => [
-      r.date || TODAY, r.vendor, r.type, r.qty_kg, r.rate, '', r.location,
-      r.gst_included ? 'Yes' : 'No', r.notes, 'AI parsed'
-    ]);
+    showStatus('Save failed. Use TSV below to paste manually.', 'error');
+    const values = newRows.map(r => [r.date||TODAY, r.vendor, r.type, r.qty_kg, r.rate, '', r.location, r.gst_included?'Yes':'No', r.notes, 'AI parsed']);
     tsvArea.value = values.map(r => r.join('\t')).join('\n');
     tsvWrap.style.display = 'block';
   }
-
   saveBtn.disabled = false;
-  const remaining = parsedRows.filter((_, i) => {
-    const tr = tableBody.querySelector(`tr[data-idx="${i}"]`);
-    return tr && tr.dataset.dup === '0';
-  }).length;
+  const remaining = parsedRows.filter((_, i) => { const tr = tableBody.querySelector(`tr[data-idx="${i}"]`); return tr && tr.dataset.dup === '0'; }).length;
   saveBtn.textContent = remaining === 0 ? '✅ All entries saved' : `💾 Save ${remaining} new rows to Google Sheet`;
 });
 
-// ── HELPERS ───────────────────────────────────────────────────────────────────
 function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+function showStatus(msg, type) { statusBar.textContent = msg; statusBar.className = 'status ' + type; statusBar.style.display = 'block'; }
+function hideStatus() { statusBar.style.display = 'none'; statusBar.textContent = ''; }
 
-function showStatus(msg, type) {
-  statusBar.textContent = msg;
-  statusBar.className = 'status ' + type;
-  statusBar.style.display = 'block';
-}
-function hideStatus() {
-  statusBar.style.display = 'none';
-  statusBar.textContent = '';
-}
-
-// ── INIT ──────────────────────────────────────────────────────────────────────
 checkConnection();
 </script>
 </body>
