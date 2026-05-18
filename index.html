@@ -324,37 +324,66 @@ const connText       = document.getElementById('connText');
 const noNewMsg       = document.getElementById('noNewMsg');
 const statsRow       = document.getElementById('statsRow');
 
+// JSONP call — bypasses CORS completely for Apps Script
+function callScript(params) {
+  return new Promise((resolve, reject) => {
+    const cbName = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
+    const timeout = setTimeout(() => {
+      delete window[cbName];
+      reject(new Error('Request timed out'));
+    }, 60000);
+
+    window[cbName] = (data) => {
+      clearTimeout(timeout);
+      delete window[cbName];
+      if (data && data.error) reject(new Error(data.error));
+      else resolve(data);
+    };
+
+    const qs = Object.entries({ ...params, callback: cbName })
+      .map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join('&');
+
+    const script = document.createElement('script');
+    script.src = `${APPS_SCRIPT_URL}?${qs}`;
+    script.onerror = () => {
+      clearTimeout(timeout);
+      delete window[cbName];
+      reject(new Error('Script load failed'));
+    };
+    document.head.appendChild(script);
+    setTimeout(() => { try { document.head.removeChild(script); } catch(e){} }, 5000);
+  });
+}
+
 function dedupKey(date, vendor, qty, rate) {
   return `${(date||'').trim()}|${(vendor||'').trim().toLowerCase()}|${String(qty||'').trim()}|${String(rate||'').trim()}`;
 }
 
 async function checkConnection() {
   try {
-    const r = await fetch(APPS_SCRIPT_URL + "?action=ping");
-    const d = await r.json();
-    if (d.status === "ok") {
-      connDot.className = "conn-dot ok";
-      connText.textContent = "Sheet connected";
+    const d = await callScript({ action: 'ping' });
+    if (d.status === 'ok') {
+      connDot.className = 'conn-dot ok';
+      connText.textContent = 'Sheet connected';
       loadExistingRows();
     } else throw new Error();
   } catch(e) {
-    connDot.className = "conn-dot err";
-    connText.textContent = "Sheet offline";
-    console.error("Connection error:", e);
+    connDot.className = 'conn-dot err';
+    connText.textContent = 'Sheet offline';
+    console.error('Connection error:', e);
   }
 }
 
 async function loadExistingRows() {
   try {
-    const r = await fetch(APPS_SCRIPT_URL + "?action=read");
-    const d = await r.json();
+    const d = await callScript({ action: 'read' });
     if (d.error) return;
     existingKeys = new Set();
     (d.rows || []).forEach(row => {
       existingKeys.add(dedupKey(row.date, row.vendor, row.qty_kg, row.rate));
     });
     renderStats(d.rows || []);
-  } catch {}
+  } catch(e) { console.error('Load rows error:', e); }
 }
 
 function renderStats(rows) {
@@ -405,17 +434,11 @@ parseBtn.addEventListener('click', async () => {
 
   try {
     await loadExistingRows();
-
-    // Call Anthropic via Apps Script proxy to avoid CORS
-    const url = `${APPS_SCRIPT_URL}?action=parse&today=${encodeURIComponent(TODAY)}&image=${encodeURIComponent(imageBase64)}`;
-    const resp = await fetch(url);
-    const data = await resp.json();
-
-    if (data.error) throw new Error(data.error);
+    const data = await callScript({ action: 'parse', today: TODAY, image: imageBase64 });
     parsedRows = data.rows || [];
 
     if (!Array.isArray(parsedRows) || parsedRows.length === 0) {
-      showStatus('No purchase entries found. Try a clearer image or crop closer to the deal text.', 'error');
+      showStatus('No purchase entries found. Try a clearer image.', 'error');
       parseBtn.disabled = false;
       parseBtn.innerHTML = '🤖 Parse screenshot with AI';
       return;
@@ -523,9 +546,7 @@ saveBtn.addEventListener('click', async () => {
   saveBtn.innerHTML = '<span class="spinner"></span> Saving…';
   hideStatus(); tsvWrap.style.display = 'none';
   try {
-    const encoded = encodeURIComponent(JSON.stringify(newRows));
-    const r = await fetch(`${APPS_SCRIPT_URL}?action=append&rows=${encoded}`);
-    const d = await r.json();
+    const d = await callScript({ action: 'append', rows: JSON.stringify(newRows) });
     if (d.error) throw new Error(d.error);
     newRows.forEach(row => existingKeys.add(dedupKey(row.date, row.vendor, row.qty_kg, row.rate)));
     await loadExistingRows();
