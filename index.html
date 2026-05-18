@@ -21,202 +21,76 @@
     --muted: #666;
     --radius: 10px;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding-bottom: 60px;
-  }
-
-  header {
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
-    padding: 14px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding-bottom: 60px; }
+  header { background: var(--card); border-bottom: 1px solid var(--border); padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
   .logo { display: flex; align-items: center; gap: 10px; }
-  .logo-icon {
-    width: 34px; height: 34px; background: var(--green); border-radius: 8px;
-    display: flex; align-items: center; justify-content: center; font-size: 17px;
-  }
+  .logo-icon { width: 34px; height: 34px; background: var(--green); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 17px; }
   .logo-text h1 { font-size: 15px; font-weight: 600; }
   .logo-text p { font-size: 12px; color: var(--muted); }
-
-  .conn-dot {
-    width: 8px; height: 8px; border-radius: 50%; background: #ccc;
-    display: inline-block; margin-right: 5px;
-  }
+  .conn-dot { width: 8px; height: 8px; border-radius: 50%; background: #ccc; display: inline-block; margin-right: 5px; }
   .conn-dot.ok { background: var(--green); }
   .conn-dot.err { background: var(--red); }
   #connStatus { font-size: 12px; color: var(--muted); display: flex; align-items: center; }
-
   main { max-width: 780px; margin: 0 auto; padding: 20px 16px; }
-
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 18px;
-    margin-bottom: 14px;
-  }
-
-  .card-title {
-    font-size: 11px; font-weight: 600; color: var(--muted);
-    text-transform: uppercase; letter-spacing: 0.06em;
-    margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
-  }
-
-  .drop-zone {
-    border: 2px dashed var(--border);
-    border-radius: var(--radius);
-    padding: 32px 16px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.15s;
-    position: relative;
-    background: var(--bg);
-  }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 14px; }
+  .card-title { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+  .drop-zone { border: 2px dashed var(--border); border-radius: var(--radius); padding: 32px 16px; text-align: center; cursor: pointer; transition: all 0.15s; position: relative; background: var(--bg); }
   .drop-zone:hover, .drop-zone.drag-over { border-color: var(--green); background: var(--green-light); }
   .drop-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
   .drop-zone .dz-icon { font-size: 32px; margin-bottom: 8px; }
   .drop-zone p { font-size: 14px; color: var(--muted); }
   .drop-zone.has-file { border-color: var(--green); background: var(--green-light); }
   .drop-zone.has-file p { color: var(--green-dark); font-weight: 500; }
-
   #imgPreviewWrap { display: none; margin-top: 12px; text-align: center; }
   #imgPreview { max-height: 200px; max-width: 100%; border-radius: 8px; border: 1px solid var(--border); }
-
-  .btn {
-    display: flex; align-items: center; justify-content: center; gap: 7px;
-    width: 100%; padding: 11px 16px; border-radius: var(--radius);
-    font-size: 14px; font-weight: 500; cursor: pointer;
-    border: 1px solid var(--border); background: var(--card); color: var(--text);
-    transition: all 0.15s; margin-bottom: 10px;
-  }
+  .btn { display: flex; align-items: center; justify-content: center; gap: 7px; width: 100%; padding: 11px 16px; border-radius: var(--radius); font-size: 14px; font-weight: 500; cursor: pointer; border: 1px solid var(--border); background: var(--card); color: var(--text); transition: all 0.15s; margin-bottom: 10px; }
   .btn:hover:not(:disabled) { background: var(--bg); }
   .btn:disabled { opacity: 0.45; cursor: not-allowed; }
   .btn.primary { background: var(--green); color: white; border-color: var(--green); }
   .btn.primary:hover:not(:disabled) { background: var(--green-dark); }
-  .btn.danger { background: var(--red-light); color: var(--red); border-color: var(--red); }
-
-  .spinner {
-    width: 15px; height: 15px; border-radius: 50%;
-    border: 2px solid rgba(255,255,255,0.35);
-    border-top-color: white;
-    animation: spin 0.65s linear infinite;
-    display: inline-block;
-  }
-  .spinner.dark { border-color: rgba(0,0,0,0.12); border-top-color: var(--text); }
+  .spinner { width: 15px; height: 15px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.35); border-top-color: white; animation: spin 0.65s linear infinite; display: inline-block; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
   .legend { display: flex; gap: 14px; font-size: 12px; color: var(--muted); margin-bottom: 10px; flex-wrap: wrap; }
   .legend span { display: flex; align-items: center; gap: 5px; }
   .dot { width: 10px; height: 10px; border-radius: 3px; }
   .dot.new { background: var(--green-mid); }
   .dot.dup { background: #ddd; }
-
-  .badge {
-    display: inline-flex; align-items: center;
-    font-size: 11px; padding: 2px 9px; border-radius: 999px; font-weight: 500; margin-left: 6px;
-  }
+  .badge { display: inline-flex; align-items: center; font-size: 11px; padding: 2px 9px; border-radius: 999px; font-weight: 500; margin-left: 6px; }
   .badge.new { background: var(--green-light); color: var(--green-dark); }
   .badge.dup { background: #f0f0f0; color: #888; border: 1px solid #e0e0e0; }
-
   .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-
   table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 640px; }
-  th {
-    font-size: 11px; font-weight: 600; color: var(--muted);
-    text-align: left; padding: 7px 8px;
-    border-bottom: 1px solid var(--border);
-    white-space: nowrap; background: var(--bg);
-  }
+  th { font-size: 11px; font-weight: 600; color: var(--muted); text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--border); white-space: nowrap; background: var(--bg); }
   td { padding: 5px 7px; border-bottom: 1px solid rgba(0,0,0,0.05); vertical-align: middle; }
   tr:last-child td { border-bottom: none; }
   tr.is-new td { background: #f0fbf7; }
   tr.is-dup td { opacity: 0.45; }
   tr.is-new:hover td { background: #e2f7f0; }
-
-  td input[type=text], td input[type=number] {
-    font-size: 13px; padding: 3px 6px; width: 100%;
-    border: 1px solid transparent; border-radius: 5px;
-    background: transparent; color: var(--text);
-    font-family: inherit;
-  }
-  td input[type=text]:focus, td input[type=number]:focus {
-    outline: none; border-color: var(--green); background: white;
-  }
+  td input[type=text], td input[type=number] { font-size: 13px; padding: 3px 6px; width: 100%; border: 1px solid transparent; border-radius: 5px; background: transparent; color: var(--text); font-family: inherit; }
+  td input[type=text]:focus, td input[type=number]:focus { outline: none; border-color: var(--green); background: white; }
   td input[type=checkbox] { width: 15px; height: 15px; cursor: pointer; accent-color: var(--green); }
-
-  .del-btn {
-    background: none; border: none; cursor: pointer;
-    color: #bbb; font-size: 16px; padding: 3px 6px;
-    border-radius: 5px; line-height: 1;
-  }
+  .del-btn { background: none; border: none; cursor: pointer; color: #bbb; font-size: 16px; padding: 3px 6px; border-radius: 5px; line-height: 1; }
   .del-btn:hover { color: var(--red); background: var(--red-light); }
-
   .check-icon { color: var(--green); font-size: 16px; }
-
-  .status {
-    font-size: 13px; padding: 10px 14px; border-radius: var(--radius);
-    margin-top: 10px; display: none; line-height: 1.5;
-  }
+  .status { font-size: 13px; padding: 10px 14px; border-radius: var(--radius); margin-top: 10px; display: none; line-height: 1.5; }
   .status.success { background: var(--green-light); color: var(--green-dark); }
   .status.error { background: var(--red-light); color: var(--red); }
-  .status.info { background: var(--amber-light); color: var(--amber); }
-
   .tsv-wrap { display: none; margin-top: 10px; }
   .tsv-wrap p { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
-  textarea.tsv {
-    width: 100%; font-size: 11px; font-family: monospace;
-    height: 90px; border: 1px solid var(--border); border-radius: 8px;
-    padding: 8px; resize: vertical; background: var(--bg); color: var(--text);
-  }
-
-  .stats-row {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 10px; margin-bottom: 14px;
-  }
-  .stat {
-    background: var(--bg); border-radius: var(--radius);
-    padding: 12px 14px; border: 1px solid var(--border);
-  }
+  textarea.tsv { width: 100%; font-size: 11px; font-family: monospace; height: 90px; border: 1px solid var(--border); border-radius: 8px; padding: 8px; resize: vertical; background: var(--bg); color: var(--text); }
+  .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 14px; }
+  .stat { background: var(--bg); border-radius: var(--radius); padding: 12px 14px; border: 1px solid var(--border); }
   .stat-label { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
   .stat-value { font-size: 20px; font-weight: 600; color: var(--text); }
-
-  .add-row-btn {
-    display: inline-flex; align-items: center; gap: 5px;
-    font-size: 13px; padding: 6px 12px; border-radius: 7px;
-    border: 1px solid var(--border); background: var(--card);
-    cursor: pointer; color: var(--text); margin-top: 10px;
-  }
+  .add-row-btn { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; padding: 6px 12px; border-radius: 7px; border: 1px solid var(--border); background: var(--card); cursor: pointer; color: var(--text); margin-top: 10px; }
   .add-row-btn:hover { background: var(--bg); }
-
   #previewSection { display: none; }
-  #noNewMsg {
-    display: none; text-align: center; padding: 20px;
-    color: var(--green-dark); font-size: 14px; font-weight: 500;
-  }
-
-  @media (max-width: 500px) {
-    header { padding: 10px 14px; }
-    main { padding: 14px 10px; }
-    .card { padding: 14px; }
-  }
+  #noNewMsg { display: none; text-align: center; padding: 20px; color: var(--green-dark); font-size: 14px; font-weight: 500; }
+  @media (max-width: 500px) { header { padding: 10px 14px; } main { padding: 14px 10px; } .card { padding: 14px; } }
 </style>
 </head>
 <body>
-
 <header>
   <div class="logo">
     <div class="logo-icon">🏭</div>
@@ -227,9 +101,7 @@
   </div>
   <div id="connStatus"><span class="conn-dot" id="connDot"></span><span id="connText">Connecting…</span></div>
 </header>
-
 <main>
-
   <div class="card">
     <div class="card-title">📸 Upload screenshot</div>
     <div class="drop-zone" id="dropZone">
@@ -237,18 +109,11 @@
       <div class="dz-icon">📱</div>
       <p id="dropText">Drop WhatsApp screenshot here, or tap to browse</p>
     </div>
-    <div id="imgPreviewWrap">
-      <img id="imgPreview" alt="Preview" />
-    </div>
+    <div id="imgPreviewWrap"><img id="imgPreview" alt="Preview" /></div>
   </div>
-
-  <button class="btn primary" id="parseBtn" disabled>
-    🤖 Parse screenshot with AI
-  </button>
-
+  <button class="btn primary" id="parseBtn" disabled>🤖 Parse screenshot with AI</button>
   <div id="previewSection">
     <div class="stats-row" id="statsRow"></div>
-
     <div class="card">
       <div class="card-title">
         📋 Parsed entries
@@ -261,312 +126,47 @@
       </div>
       <div class="table-wrap">
         <table>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Vendor</th>
-              <th>Type</th>
-              <th>Qty (KG)</th>
-              <th>Rate/T</th>
-              <th>Location</th>
-              <th>GST?</th>
-              <th>Notes</th>
-              <th></th>
-            </tr>
-          </thead>
+          <thead><tr><th>Date</th><th>Vendor</th><th>Type</th><th>Qty (KG)</th><th>Rate/T</th><th>Location</th><th>GST?</th><th>Notes</th><th></th></tr></thead>
           <tbody id="tableBody"></tbody>
         </table>
       </div>
       <div id="noNewMsg">✅ All entries from this screenshot are already in the sheet.</div>
       <button class="add-row-btn" id="addRowBtn">＋ Add row manually</button>
     </div>
-
-    <button class="btn primary" id="saveBtn" disabled>
-      💾 Save new rows to Google Sheet
-    </button>
+    <button class="btn primary" id="saveBtn" disabled>💾 Save new rows to Google Sheet</button>
     <div class="status" id="statusBar"></div>
     <div class="tsv-wrap" id="tsvWrap">
       <p>Copy & paste directly into your sheet (Ctrl+Shift+V):</p>
       <textarea class="tsv" id="tsvArea" readonly></textarea>
     </div>
   </div>
-
 </main>
-
 <script>
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzbaYOHicTrdR4olZNORVXd6vpIc-VrHWOtOCS4eCBrMqPmN5owAdvsRPLRqwFs2uy6/exec";
-const TODAY = (() => {
-  const d = new Date();
-  return `${d.getDate()}.${d.getMonth()+1}.${String(d.getFullYear()).slice(-2)}`;
-})();
-
-let imageBase64 = null;
-let parsedRows  = [];
-let existingKeys = new Set();
-
-const fileInput      = document.getElementById('fileInput');
-const dropZone       = document.getElementById('dropZone');
-const dropText       = document.getElementById('dropText');
-const imgPreview     = document.getElementById('imgPreview');
-const imgPreviewWrap = document.getElementById('imgPreviewWrap');
-const parseBtn       = document.getElementById('parseBtn');
-const previewSection = document.getElementById('previewSection');
-const tableBody      = document.getElementById('tableBody');
-const newBadge       = document.getElementById('newBadge');
-const dupBadge       = document.getElementById('dupBadge');
-const saveBtn        = document.getElementById('saveBtn');
-const addRowBtn      = document.getElementById('addRowBtn');
-const statusBar      = document.getElementById('statusBar');
-const tsvWrap        = document.getElementById('tsvWrap');
-const tsvArea        = document.getElementById('tsvArea');
-const connDot        = document.getElementById('connDot');
-const connText       = document.getElementById('connText');
-const noNewMsg       = document.getElementById('noNewMsg');
-const statsRow       = document.getElementById('statsRow');
-
-// JSONP call — bypasses CORS completely for Apps Script
-function callScript(params) {
-  return new Promise((resolve, reject) => {
-    const cbName = 'cb_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-    const timeout = setTimeout(() => {
-      delete window[cbName];
-      reject(new Error('Request timed out'));
-    }, 60000);
-
-    window[cbName] = (data) => {
-      clearTimeout(timeout);
-      delete window[cbName];
-      if (data && data.error) reject(new Error(data.error));
-      else resolve(data);
-    };
-
-    const qs = Object.entries({ ...params, callback: cbName })
-      .map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join('&');
-
-    const script = document.createElement('script');
-    script.src = `${APPS_SCRIPT_URL}?${qs}`;
-    script.onerror = () => {
-      clearTimeout(timeout);
-      delete window[cbName];
-      reject(new Error('Script load failed'));
-    };
-    document.head.appendChild(script);
-    setTimeout(() => { try { document.head.removeChild(script); } catch(e){} }, 5000);
-  });
-}
-
-function dedupKey(date, vendor, qty, rate) {
-  return `${(date||'').trim()}|${(vendor||'').trim().toLowerCase()}|${String(qty||'').trim()}|${String(rate||'').trim()}`;
-}
-
-async function checkConnection() {
-  try {
-    const d = await callScript({ action: 'ping' });
-    if (d.status === 'ok') {
-      connDot.className = 'conn-dot ok';
-      connText.textContent = 'Sheet connected';
-      loadExistingRows();
-    } else throw new Error();
-  } catch(e) {
-    connDot.className = 'conn-dot err';
-    connText.textContent = 'Sheet offline';
-    console.error('Connection error:', e);
-  }
-}
-
-async function loadExistingRows() {
-  try {
-    const d = await callScript({ action: 'read' });
-    if (d.error) return;
-    existingKeys = new Set();
-    (d.rows || []).forEach(row => {
-      existingKeys.add(dedupKey(row.date, row.vendor, row.qty_kg, row.rate));
-    });
-    renderStats(d.rows || []);
-  } catch(e) { console.error('Load rows error:', e); }
-}
-
-function renderStats(rows) {
-  const today = rows.filter(r => r.date === TODAY);
-  const totalQty = rows.reduce((s, r) => s + (parseFloat(r.qty_kg) || 0), 0);
-  const todayQty = today.reduce((s, r) => s + (parseFloat(r.qty_kg) || 0), 0);
-  statsRow.innerHTML = `
-    <div class="stat"><div class="stat-label">Total entries</div><div class="stat-value">${rows.length}</div></div>
-    <div class="stat"><div class="stat-label">Today's entries</div><div class="stat-value">${today.length}</div></div>
-    <div class="stat"><div class="stat-label">Total qty (T)</div><div class="stat-value">${(totalQty/1000).toFixed(1)}</div></div>
-    <div class="stat"><div class="stat-label">Today's qty (T)</div><div class="stat-value">${(todayQty/1000).toFixed(1)}</div></div>
-  `;
-}
-
-fileInput.addEventListener('change', e => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    const dataUrl = ev.target.result;
-    imageBase64 = dataUrl.split(',')[1];
-    imgPreview.src = dataUrl;
-    imgPreviewWrap.style.display = 'block';
-    dropZone.classList.add('has-file');
-    dropText.textContent = file.name;
-    parseBtn.disabled = false;
-    previewSection.style.display = 'none';
-    hideStatus();
-    tsvWrap.style.display = 'none';
-  };
-  reader.readAsDataURL(file);
-});
-
-dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
-dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
-dropZone.addEventListener('drop', e => {
-  e.preventDefault();
-  dropZone.classList.remove('drag-over');
-  const file = e.dataTransfer.files[0];
-  if (file) { fileInput.files = e.dataTransfer.files; fileInput.dispatchEvent(new Event('change')); }
-});
-
-parseBtn.addEventListener('click', async () => {
-  if (!imageBase64) return;
-  parseBtn.disabled = true;
-  parseBtn.innerHTML = '<span class="spinner"></span> Parsing…';
-  hideStatus(); tsvWrap.style.display = 'none';
-
-  try {
-    await loadExistingRows();
-    const data = await callScript({ action: 'parse', today: TODAY, image: imageBase64 });
-    parsedRows = data.rows || [];
-
-    if (!Array.isArray(parsedRows) || parsedRows.length === 0) {
-      showStatus('No purchase entries found. Try a clearer image.', 'error');
-      parseBtn.disabled = false;
-      parseBtn.innerHTML = '🤖 Parse screenshot with AI';
-      return;
-    }
-
-    renderTable();
-    previewSection.style.display = 'block';
-    setTimeout(() => previewSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
-
-  } catch (err) {
-    showStatus('Parse error: ' + err.message, 'error');
-  }
-
-  parseBtn.disabled = false;
-  parseBtn.innerHTML = '🤖 Parse screenshot with AI';
-});
-
-function renderTable() {
-  tableBody.innerHTML = '';
-  let nNew = 0, nDup = 0;
-  parsedRows.forEach((row, i) => {
-    const key = dedupKey(row.date, row.vendor, row.qty_kg, row.rate);
-    const isDup = existingKeys.has(key);
-    isDup ? nDup++ : nNew++;
-    const tr = document.createElement('tr');
-    tr.className = isDup ? 'is-dup' : 'is-new';
-    tr.dataset.dup = isDup ? '1' : '0';
-    tr.dataset.idx = i;
-    tr.innerHTML = `
-      <td><input type="text" value="${esc(row.date || TODAY)}" data-k="date" ${isDup?'disabled':''} /></td>
-      <td><input type="text" value="${esc(row.vendor)}" data-k="vendor" ${isDup?'disabled':''} /></td>
-      <td><input type="text" value="${esc(row.type)}" data-k="type" ${isDup?'disabled':''} /></td>
-      <td><input type="number" value="${row.qty_kg||''}" data-k="qty_kg" ${isDup?'disabled':''} /></td>
-      <td><input type="number" value="${row.rate||''}" data-k="rate" ${isDup?'disabled':''} /></td>
-      <td><input type="text" value="${esc(row.location)}" data-k="location" ${isDup?'disabled':''} /></td>
-      <td style="text-align:center;"><input type="checkbox" ${row.gst_included?'checked':''} data-k="gst_included" ${isDup?'disabled':''} /></td>
-      <td><input type="text" value="${esc(row.notes)}" data-k="notes" ${isDup?'disabled':''} /></td>
-      <td>${isDup
-        ? '<span class="check-icon" title="Already in sheet">✓</span>'
-        : `<button class="del-btn" data-del="${i}" title="Remove">✕</button>`
-      }</td>
-    `;
-    tableBody.appendChild(tr);
-  });
-  wireTableEvents();
-  updateCounters(nNew, nDup);
-}
-
-function wireTableEvents() {
-  tableBody.querySelectorAll('input[data-k]').forEach(inp => {
-    inp.addEventListener('input', e => {
-      const tr  = e.target.closest('tr');
-      const idx = +tr.dataset.idx;
-      const k   = e.target.dataset.k;
-      parsedRows[idx][k] = k === 'gst_included' ? e.target.checked : e.target.value;
-      if (tr.dataset.dup === '0') {
-        const key = dedupKey(parsedRows[idx].date, parsedRows[idx].vendor, parsedRows[idx].qty_kg, parsedRows[idx].rate);
-        if (existingKeys.has(key)) {
-          tr.className = 'is-dup'; tr.dataset.dup = '1';
-          tr.querySelectorAll('input').forEach(i => i.disabled = true);
-          recount();
-        }
-      }
-    });
-  });
-  tableBody.querySelectorAll('[data-del]').forEach(btn => {
-    btn.addEventListener('click', e => {
-      const i = +e.currentTarget.dataset.del;
-      parsedRows.splice(i, 1);
-      renderTable();
-    });
-  });
-}
-
-function recount() {
-  let nNew = 0, nDup = 0;
-  tableBody.querySelectorAll('tr').forEach(tr => tr.dataset.dup === '1' ? nDup++ : nNew++);
-  updateCounters(nNew, nDup);
-}
-
-function updateCounters(nNew, nDup) {
-  newBadge.textContent = nNew + ' new';
-  dupBadge.textContent = nDup + ' already logged';
-  dupBadge.style.display = nDup > 0 ? 'inline-flex' : 'none';
-  noNewMsg.style.display = nNew === 0 ? 'block' : 'none';
-  saveBtn.disabled = nNew === 0;
-  saveBtn.textContent = nNew === 0
-    ? '✅ All entries already in sheet'
-    : `💾 Save ${nNew} new row${nNew > 1 ? 's' : ''} to Google Sheet`;
-}
-
-addRowBtn.addEventListener('click', () => {
-  parsedRows.push({ date: TODAY, vendor: '', type: '', qty_kg: '', rate: '', location: '', gst_included: false, notes: '' });
-  renderTable();
-  tableBody.lastElementChild?.querySelector('input')?.focus();
-});
-
-saveBtn.addEventListener('click', async () => {
-  const newRows = parsedRows.filter((_, i) => {
-    const tr = tableBody.querySelector(`tr[data-idx="${i}"]`);
-    return tr && tr.dataset.dup === '0';
-  });
-  if (!newRows.length) return;
-  saveBtn.disabled = true;
-  saveBtn.innerHTML = '<span class="spinner"></span> Saving…';
-  hideStatus(); tsvWrap.style.display = 'none';
-  try {
-    const d = await callScript({ action: 'append', rows: JSON.stringify(newRows) });
-    if (d.error) throw new Error(d.error);
-    newRows.forEach(row => existingKeys.add(dedupKey(row.date, row.vendor, row.qty_kg, row.rate)));
-    await loadExistingRows();
-    showStatus(`✓ ${d.appended} row${d.appended > 1 ? 's' : ''} saved. ${parsedRows.length - newRows.length} duplicate${parsedRows.length - newRows.length !== 1 ? 's' : ''} skipped.`, 'success');
-    renderTable();
-  } catch (err) {
-    showStatus('Save failed. Use TSV below to paste manually.', 'error');
-    const values = newRows.map(r => [r.date||TODAY, r.vendor, r.type, r.qty_kg, r.rate, '', r.location, r.gst_included?'Yes':'No', r.notes, 'AI parsed']);
-    tsvArea.value = values.map(r => r.join('\t')).join('\n');
-    tsvWrap.style.display = 'block';
-  }
-  saveBtn.disabled = false;
-  const remaining = parsedRows.filter((_, i) => { const tr = tableBody.querySelector(`tr[data-idx="${i}"]`); return tr && tr.dataset.dup === '0'; }).length;
-  saveBtn.textContent = remaining === 0 ? '✅ All entries saved' : `💾 Save ${remaining} new rows to Google Sheet`;
-});
-
-function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
-function showStatus(msg, type) { statusBar.textContent = msg; statusBar.className = 'status ' + type; statusBar.style.display = 'block'; }
-function hideStatus() { statusBar.style.display = 'none'; statusBar.textContent = ''; }
-
+const TODAY = (() => { const d = new Date(); return d.getDate()+"."+( d.getMonth()+1)+"."+String(d.getFullYear()).slice(-2); })();
+let imageBase64=null,parsedRows=[],existingKeys=new Set();
+const fileInput=document.getElementById('fileInput'),dropZone=document.getElementById('dropZone'),dropText=document.getElementById('dropText'),imgPreview=document.getElementById('imgPreview'),imgPreviewWrap=document.getElementById('imgPreviewWrap'),parseBtn=document.getElementById('parseBtn'),previewSection=document.getElementById('previewSection'),tableBody=document.getElementById('tableBody'),newBadge=document.getElementById('newBadge'),dupBadge=document.getElementById('dupBadge'),saveBtn=document.getElementById('saveBtn'),addRowBtn=document.getElementById('addRowBtn'),statusBar=document.getElementById('statusBar'),tsvWrap=document.getElementById('tsvWrap'),tsvArea=document.getElementById('tsvArea'),connDot=document.getElementById('connDot'),connText=document.getElementById('connText'),noNewMsg=document.getElementById('noNewMsg'),statsRow=document.getElementById('statsRow');
+function compressImage(base64){return new Promise(resolve=>{const img=new Image();img.onload=()=>{let w=img.width,h=img.height;const M=1200;if(w>M||h>M){if(w>h){h=Math.round(h*M/w);w=M;}else{w=Math.round(w*M/h);h=M;}}const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);let q=0.82,r=c.toDataURL('image/jpeg',q).split(',')[1];while(r.length*0.75>800*1024&&q>0.3){q-=0.1;r=c.toDataURL('image/jpeg',q).split(',')[1];}resolve(r);};img.src='data:image/jpeg;base64,'+base64;});}
+function callScript(params){return new Promise((resolve,reject)=>{const cb='cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);const t=setTimeout(()=>{delete window[cb];reject(new Error('Timed out'));},50000);window[cb]=(data)=>{clearTimeout(t);delete window[cb];if(data&&data.error)reject(new Error(data.error));else resolve(data);};const qs=Object.entries({...params,callback:cb}).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&');const s=document.createElement('script');s.src=APPS_SCRIPT_URL+'?'+qs;s.onerror=()=>{clearTimeout(t);delete window[cb];reject(new Error('Failed'));};document.head.appendChild(s);setTimeout(()=>{try{document.head.removeChild(s);}catch(e){}},8000);});}
+function dedupKey(a,b,c,d){return(a||'').trim()+'|'+(b||'').trim().toLowerCase()+'|'+String(c||'').trim()+'|'+String(d||'').trim();}
+async function checkConnection(){try{const d=await callScript({action:'ping'});if(d.status==='ok'){connDot.className='conn-dot ok';connText.textContent='Sheet connected';loadExistingRows();}else throw new Error();}catch(e){connDot.className='conn-dot err';connText.textContent='Sheet offline';}}
+async function loadExistingRows(){try{const d=await callScript({action:'read'});if(d.error)return;existingKeys=new Set();(d.rows||[]).forEach(r=>existingKeys.add(dedupKey(r.date,r.vendor,r.qty_kg,r.rate)));renderStats(d.rows||[]);}catch(e){}}
+function renderStats(rows){const t=rows.filter(r=>r.date===TODAY);const tq=rows.reduce((s,r)=>s+(parseFloat(r.qty_kg)||0),0);const dq=t.reduce((s,r)=>s+(parseFloat(r.qty_kg)||0),0);statsRow.innerHTML='<div class="stat"><div class="stat-label">Total entries</div><div class="stat-value">'+rows.length+'</div></div><div class="stat"><div class="stat-label">Today entries</div><div class="stat-value">'+t.length+'</div></div><div class="stat"><div class="stat-label">Total qty (T)</div><div class="stat-value">'+(tq/1000).toFixed(1)+'</div></div><div class="stat"><div class="stat-label">Today qty (T)</div><div class="stat-value">'+(dq/1000).toFixed(1)+'</div></div>';}
+fileInput.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=ev=>{const u=ev.target.result;imageBase64=u.split(',')[1];imgPreview.src=u;imgPreviewWrap.style.display='block';dropZone.classList.add('has-file');dropText.textContent=f.name;parseBtn.disabled=false;previewSection.style.display='none';hideStatus();tsvWrap.style.display='none';};r.readAsDataURL(f);});
+dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('drag-over');});
+dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop',e=>{e.preventDefault();dropZone.classList.remove('drag-over');const f=e.dataTransfer.files[0];if(f){fileInput.files=e.dataTransfer.files;fileInput.dispatchEvent(new Event('change'));}});
+parseBtn.addEventListener('click',async()=>{if(!imageBase64)return;parseBtn.disabled=true;parseBtn.innerHTML='<span class="spinner"></span> Compressing & parsing…';hideStatus();tsvWrap.style.display='none';try{await loadExistingRows();const compressed=await compressImage(imageBase64);const data=await callScript({action:'parse',today:TODAY,image:compressed});parsedRows=data.rows||[];if(!Array.isArray(parsedRows)||parsedRows.length===0){showStatus('No purchase entries found. Try a clearer image.','error');parseBtn.disabled=false;parseBtn.innerHTML='🤖 Parse screenshot with AI';return;}renderTable();previewSection.style.display='block';setTimeout(()=>previewSection.scrollIntoView({behavior:'smooth',block:'start'}),100);}catch(err){showStatus('Parse error: '+err.message,'error');}parseBtn.disabled=false;parseBtn.innerHTML='🤖 Parse screenshot with AI';});
+function renderTable(){tableBody.innerHTML='';let nN=0,nD=0;parsedRows.forEach((row,i)=>{const key=dedupKey(row.date,row.vendor,row.qty_kg,row.rate);const isDup=existingKeys.has(key);isDup?nD++:nN++;const tr=document.createElement('tr');tr.className=isDup?'is-dup':'is-new';tr.dataset.dup=isDup?'1':'0';tr.dataset.idx=i;tr.innerHTML='<td><input type="text" value="'+esc(row.date||TODAY)+'" data-k="date" '+(isDup?'disabled':'')+' /></td><td><input type="text" value="'+esc(row.vendor)+'" data-k="vendor" '+(isDup?'disabled':'')+' /></td><td><input type="text" value="'+esc(row.type)+'" data-k="type" '+(isDup?'disabled':'')+' /></td><td><input type="number" value="'+(row.qty_kg||'')+'" data-k="qty_kg" '+(isDup?'disabled':'')+' /></td><td><input type="number" value="'+(row.rate||'')+'" data-k="rate" '+(isDup?'disabled':'')+' /></td><td><input type="text" value="'+esc(row.location)+'" data-k="location" '+(isDup?'disabled':'')+' /></td><td style="text-align:center;"><input type="checkbox" '+(row.gst_included?'checked':'')+' data-k="gst_included" '+(isDup?'disabled':'')+' /></td><td><input type="text" value="'+esc(row.notes)+'" data-k="notes" '+(isDup?'disabled':'')+' /></td><td>'+(isDup?'<span class="check-icon">✓</span>':'<button class="del-btn" data-del="'+i+'">✕</button>')+'</td>';tableBody.appendChild(tr);});wireTableEvents();updateCounters(nN,nD);}
+function wireTableEvents(){tableBody.querySelectorAll('input[data-k]').forEach(inp=>{inp.addEventListener('input',e=>{const tr=e.target.closest('tr');const idx=+tr.dataset.idx;const k=e.target.dataset.k;parsedRows[idx][k]=k==='gst_included'?e.target.checked:e.target.value;if(tr.dataset.dup==='0'){const key=dedupKey(parsedRows[idx].date,parsedRows[idx].vendor,parsedRows[idx].qty_kg,parsedRows[idx].rate);if(existingKeys.has(key)){tr.className='is-dup';tr.dataset.dup='1';tr.querySelectorAll('input').forEach(i=>i.disabled=true);recount();}}});});tableBody.querySelectorAll('[data-del]').forEach(btn=>{btn.addEventListener('click',e=>{parsedRows.splice(+e.currentTarget.dataset.del,1);renderTable();});});}
+function recount(){let nN=0,nD=0;tableBody.querySelectorAll('tr').forEach(tr=>tr.dataset.dup==='1'?nD++:nN++);updateCounters(nN,nD);}
+function updateCounters(nN,nD){newBadge.textContent=nN+' new';dupBadge.textContent=nD+' already logged';dupBadge.style.display=nD>0?'inline-flex':'none';noNewMsg.style.display=nN===0?'block':'none';saveBtn.disabled=nN===0;saveBtn.textContent=nN===0?'✅ All entries already in sheet':'💾 Save '+nN+' new row'+(nN>1?'s':'')+' to Google Sheet';}
+addRowBtn.addEventListener('click',()=>{parsedRows.push({date:TODAY,vendor:'',type:'',qty_kg:'',rate:'',location:'',gst_included:false,notes:''});renderTable();tableBody.lastElementChild?.querySelector('input')?.focus();});
+saveBtn.addEventListener('click',async()=>{const newRows=parsedRows.filter((_,i)=>{const tr=tableBody.querySelector('tr[data-idx="'+i+'"]');return tr&&tr.dataset.dup==='0';});if(!newRows.length)return;saveBtn.disabled=true;saveBtn.innerHTML='<span class="spinner"></span> Saving…';hideStatus();tsvWrap.style.display='none';try{const d=await callScript({action:'append',rows:JSON.stringify(newRows)});if(d.error)throw new Error(d.error);newRows.forEach(row=>existingKeys.add(dedupKey(row.date,row.vendor,row.qty_kg,row.rate)));await loadExistingRows();showStatus('✓ '+d.appended+' row'+(d.appended>1?'s':'')+' saved. '+(parsedRows.length-newRows.length)+' duplicates skipped.','success');renderTable();}catch(err){showStatus('Save failed. Use TSV below.','error');const v=newRows.map(r=>[r.date||TODAY,r.vendor,r.type,r.qty_kg,r.rate,'',r.location,r.gst_included?'Yes':'No',r.notes,'AI parsed']);tsvArea.value=v.map(r=>r.join('	')).join('
+');tsvWrap.style.display='block';}saveBtn.disabled=false;const rem=parsedRows.filter((_,i)=>{const tr=tableBody.querySelector('tr[data-idx="'+i+'"]');return tr&&tr.dataset.dup==='0';}).length;saveBtn.textContent=rem===0?'✅ All entries saved':'💾 Save '+rem+' new rows to Google Sheet';});
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
+function showStatus(msg,type){statusBar.textContent=msg;statusBar.className='status '+type;statusBar.style.display='block';}
+function hideStatus(){statusBar.style.display='none';statusBar.textContent='';}
 checkConnection();
 </script>
 </body>
